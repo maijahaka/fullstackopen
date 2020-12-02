@@ -24,6 +24,14 @@ const Statistics = ({ good, neutral, bad }) => {
         good / sum(good, neutral, bad) * 100
     )
     
+    if (sum(good, neutral, bad) == 0) {
+        return (
+            <div>
+                No feedback given
+            </div>
+        )
+    }
+    
     return (
         <div>
             <Summary text1="good" value={good} />
@@ -52,7 +60,7 @@ const App = () => {
     const handleBadClick = () => (
         setBad(bad + 1)
     )
-
+    
     return (
         <>
         <h1>give feedback</h1>
