@@ -8,39 +8,56 @@ const Button = ({ handleClick, text }) => (
 )
 
 const StatisticLine = ({ text1, value, text2 }) => (
-    <p>{text1} {value} {text2}</p>
+    <tr>
+        <td>{text1}</td>
+        <td>{value}</td>
+        <td>{text2}</td>
+    </tr>
+)
+
+const StatisticTable = ({ good, bad, neutral, sum, average, positive }) => (
+    <table>
+        <tbody>
+            <StatisticLine text1="good" value={good} />
+            <StatisticLine text1="neutral" value={neutral} />
+            <StatisticLine text1="bad" value={bad} />
+            <StatisticLine text1="all" value={sum} />
+            <StatisticLine text1="average" value={average} />
+            <StatisticLine text1="positive" value={positive} text2="%" />
+        </tbody>
+    </table>
 )
 
 const Statistics = ({ good, neutral, bad }) => {
-    const sum = (good, neutral, bad) => (
+    const calculateSum = (good, neutral, bad) => (
         good + neutral + bad
     )
 
-    const average = (good, neutral, bad) => (
-        (1 * good + 0 * neutral + (-1) * bad) / sum(good, neutral, bad)
+    const calculateAverage = (good, neutral, bad) => (
+        (1 * good + 0 * neutral + (-1) * bad) / calculateSum(good, neutral, bad)
     )
 
-    const positive = (good, neutral, bad) => (
-        good / sum(good, neutral, bad) * 100
+    const calculatePositive = (good, neutral, bad) => (
+        good / calculateSum(good, neutral, bad) * 100
     )
     
-    if (sum(good, neutral, bad) == 0) {
+    if (calculateSum(good, neutral, bad) === 0) {
         return (
             <div>
                 No feedback given
             </div>
         )
     }
-    
+
+    const sum = calculateSum(good, neutral, bad)
+    const average = calculateAverage(good, neutral, bad)
+    const positive = calculatePositive(good, neutral, bad)
+
     return (
-        <div>
-            <StatisticLine text1="good" value={good} />
-            <StatisticLine text1="neutral" value={neutral} />
-            <StatisticLine text1="bad" value={bad} />
-            <StatisticLine text1="all" value={sum(good, neutral, bad)} />
-            <StatisticLine text1="average" value={average(good, neutral, bad)} />
-            <StatisticLine text1="positive" value={positive(good, neutral, bad)} text2="%" />
-        </div>
+        <StatisticTable 
+            good={good} neutral={neutral} bad={bad}
+            sum={sum} average={average} positive={positive} 
+        />
     )
 }
 
