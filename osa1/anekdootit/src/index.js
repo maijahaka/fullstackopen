@@ -20,16 +20,38 @@ const App = (props) => {
   )
 
   const handleVoteClick = () => {
-    const copy = { ...votes }
+    const copy = [ ...votes ]
     copy[selected] += 1
     
     return (
       setVotes(copy)
     )
   }
+
+  const findIndexOfGreatest = (array) => {
+    
+    var greatest
+    var indexOfGreatest
+
+    for (var i = 0; i < array.length; i++) {
+      if (!greatest || array[i] > greatest) {
+        greatest = array[i]
+        indexOfGreatest = i
+      }
+    }
+    
+    return (
+      indexOfGreatest
+    )
+  }
+
+  const indexOfGreatest = findIndexOfGreatest(votes)
   
   return (
     <>
+
+    <h1>Anecdote of the day</h1>
+
     <div>
       <p>{props.anecdotes[selected]}</p>
       <p>has {votes[selected]} votes</p>
@@ -37,6 +59,14 @@ const App = (props) => {
 
     <Button handleClick={handleVoteClick} text="vote" />
     <Button handleClick={handleNextClick} text="next anecdote" />
+
+    <h1>Anecdote with most votes</h1>
+
+    <div>
+      <p>{props.anecdotes[indexOfGreatest]}</p>
+      <p>has {votes[indexOfGreatest]} votes</p>
+      <p></p>
+    </div>
     </>
   )
 }
