@@ -1,10 +1,14 @@
 import React from 'react'
 import CountryName from './CountryName'
 
-const Countries = ({ countries }) => (
+const Countries = (props) => (
     <div>
-        {countries.map(country => 
-            <CountryName key={country.numericCode} country={country} />
+        {props.countries.map(country => 
+            <CountryName 
+                key={country.numericCode} 
+                country={country}
+                handleButtonClick={props.handleButtonClick} 
+            />
         )}
     </div>
 )

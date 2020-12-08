@@ -2,8 +2,8 @@ import React from 'react'
 import Countries from './Countries'
 import CountryDetails from './CountryDetails'
 
-const ListCountries = ({ countries }) => {
-    const l = countries.length
+const ListCountries = (props) => {
+    const l = props.countries.length
     
     if (l > 10) {
         return (
@@ -13,13 +13,16 @@ const ListCountries = ({ countries }) => {
     
     if (l > 1 && l < 11) {
         return (
-            <Countries countries={countries} />
+            <Countries 
+                countries={props.countries}
+                handleButtonClick={props.handleButtonClick} 
+            />
         )
     }
 
     if (l === 1) {
         return (
-            <CountryDetails country={countries[0]} />
+            <CountryDetails country={props.countries[0]} />
         )
     }
 

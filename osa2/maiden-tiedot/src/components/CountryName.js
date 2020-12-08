@@ -1,8 +1,13 @@
 import React from 'react'
+import Button from './Button'
 
-const CountryName = ({ country }) => (
+const CountryName = (props) => (
     <p>
-        {country.name}
+        {props.country.name}
+        <Button 
+            country={props.country} 
+            handleButtonClick={props.handleButtonClick} 
+        />
     </p>
 )
 

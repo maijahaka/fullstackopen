@@ -12,6 +12,11 @@ const App = () => {
     setNewFilter(event.target.value)
   }
 
+  const handleButtonClick = (event) => {
+    console.log('clicked', event.target.value)
+    setNewFilter(event.target.value)
+  }
+
   const countriesToShow = newFilter.length === 0
     ? countries
     : countries.filter(country => country.name.toLowerCase().includes(newFilter.toLowerCase()))
@@ -30,7 +35,10 @@ const App = () => {
   return (
     <>
       <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} />
-      <ListCountries countries={countriesToShow} />
+      <ListCountries 
+        countries={countriesToShow} 
+        handleButtonClick={handleButtonClick} 
+      />
     </>
   )
 }
