@@ -5,7 +5,7 @@ import ListCountries from './components/ListCountries'
 
 const App = () => {
   const [countries, setCountries] = useState([])
-  const [newFilter, setNewFilter] = useState([])
+  const [newFilter, setNewFilter] = useState('')
 
   const handleFilterChange = (event) => {
     console.log('filter', event.target.value)
