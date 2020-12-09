@@ -24,6 +24,11 @@
       "name": "Tyyppi",
       "number": "123456",
       "id": 5
+    },
+    {
+      "name": "Uusi Henkilö",
+      "number": "111222",
+      "id": 6
     }
   ]
 }
