@@ -9,6 +9,29 @@ const App = () => {
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
     const [ newFilter, setNewFilter ] = useState('')
+    const [ notification, setNotification ] =useState(null)
+    
+    const Notification = ({ message }) => {
+        const notificationStyle = {
+            color: 'green',
+            background: 'lightgrey',
+            fontSize: 20,
+            borderStyle: 'solid',
+            borderRadius: 5,
+            padding: 10,
+            marginBottom: 10
+        }
+
+        if (message == null) {
+            return null
+        }
+
+        return (
+            <div style={notificationStyle}>
+                {message}
+            </div>
+        )
+    }
 
     useEffect(() => {
         personService
@@ -32,6 +55,11 @@ const App = () => {
                     : returnedPerson    
                 ))
             })
+        
+        setNotification(`Changed the number of ${newName} to ${newNumber}`)
+        setTimeout(() => {
+            setNotification(null)
+        }, 5000)
     }
     
     const addPerson = (event) => {
@@ -52,6 +80,11 @@ const App = () => {
                 .then(returnedPerson => 
                     setPersons(persons.concat(returnedPerson))    
                 )
+            
+            setNotification(`Added ${newName}`)
+            setTimeout(() => {
+                setNotification(null)
+            }, 5000)
         }
 
         setNewName('')
@@ -82,6 +115,11 @@ const App = () => {
                         setPersons(persons.filter(p => p.id !== person.id))
                     }
                 })
+            
+            setNotification(`Deleted ${person.name}`)
+            setTimeout(() => {
+                setNotification(null)
+            }, 5000)
         }
     }
 
@@ -89,9 +127,12 @@ const App = () => {
         ? persons
         : persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase()))
 
+        
     return (
         <div>
             <h2>Phonebook</h2>
+
+            <Notification message={notification} />
 
             <Filter newFilter={newFilter} handleChange={handleFilterChange} />
 
