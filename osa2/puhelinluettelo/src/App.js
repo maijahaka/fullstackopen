@@ -56,6 +56,18 @@ const App = () => {
         setNewFilter(event.target.value)
     }
 
+    const handleButtonClick = (person) => {
+        if (window.confirm(`Delete ${person.name}?`)) {
+            personService
+                .deleteObject(person.id)
+                .then(status => {
+                    if (status === 200) {
+                        setPersons(persons.filter(p => p.id !== person.id))
+                    }
+                })
+        }
+    }
+
     const personsToShow = newFilter.length === 0
         ? persons
         : persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase()))
@@ -78,7 +90,10 @@ const App = () => {
 
             <h2>Numbers</h2>
             
-            <Persons persons={personsToShow} />
+            <Persons 
+                persons={personsToShow}
+                handleButtonClick={handleButtonClick}
+            />
         </div>
     )
 }
