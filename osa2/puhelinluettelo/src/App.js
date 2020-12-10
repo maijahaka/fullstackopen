@@ -9,7 +9,8 @@ const App = () => {
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
     const [ newFilter, setNewFilter ] = useState('')
-    const [ notification, setNotification ] =useState(null)
+    const [ notification, setNotification ] = useState(null)
+    const [ errorMessage, setErrorMessage ] = useState(null)
     
     const Notification = ({ message }) => {
         const notificationStyle = {
@@ -28,6 +29,28 @@ const App = () => {
 
         return (
             <div style={notificationStyle}>
+                {message}
+            </div>
+        )
+    }
+
+    const ErrorMessage = ({ message }) => {
+        const errorMessageStyle = {
+            color: 'red',
+            background: 'lightgrey',
+            fontSize: 20,
+            borderStyle: 'solid',
+            borderRadius: 5,
+            padding: 10,
+            marginBottom: 10
+        }
+
+        if (message == null) {
+            return null
+        }
+
+        return (
+            <div style={errorMessageStyle}>
                 {message}
             </div>
         )
@@ -54,12 +77,20 @@ const App = () => {
                     ? p
                     : returnedPerson    
                 ))
+                setNotification(`Changed the number of ${newName} to ${newNumber}`)
+                setTimeout(() => {
+                    setNotification(null)
+                }, 5000)
             })
-        
-        setNotification(`Changed the number of ${newName} to ${newNumber}`)
-        setTimeout(() => {
-            setNotification(null)
-        }, 5000)
+            .catch(error => {
+                setErrorMessage(
+                    `Information of ${newName} has already been removed from server`
+                )
+                setTimeout(() => {
+                    setErrorMessage(null)
+                }, 5000)
+                setPersons(persons.filter(p => p.id !== person.id))
+            })
     }
     
     const addPerson = (event) => {
@@ -133,6 +164,7 @@ const App = () => {
             <h2>Phonebook</h2>
 
             <Notification message={notification} />
+            <ErrorMessage message={errorMessage} />
 
             <Filter newFilter={newFilter} handleChange={handleFilterChange} />
 
