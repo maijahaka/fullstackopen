@@ -142,7 +142,7 @@ const App = () => {
             personService
                 .deleteObject(person.id)
                 .then(status => {
-                    if (status === 200) {
+                    if (status === 204) {
                         setPersons(persons.filter(p => p.id !== person.id))
                     }
                 })
