@@ -108,18 +108,27 @@ const App = () => {
 
             personService
                 .create(personObject)
-                .then(returnedPerson => 
-                    setPersons(persons.concat(returnedPerson))    
-                )
-            
-            setNotification(`Added ${newName}`)
-            setTimeout(() => {
-                setNotification(null)
-            }, 5000)
+                .then(returnedPerson => {
+                    setPersons(persons.concat(returnedPerson))  
+
+                    setNotification(`Added ${newName}`)
+                    setTimeout(() => {
+                        setNotification(null)
+                    }, 5000) 
+                    
+                    setNewName('')
+                    setNewNumber('')
+                })
+                .catch(error => {
+                    setErrorMessage(
+                        error.response.data.error
+                    )
+                    setTimeout(() => {
+                        setErrorMessage(null)
+                    }, 5000)
+                }) 
         }
 
-        setNewName('')
-        setNewNumber('')
     }
 
     const handleNameChange = (event) => {
