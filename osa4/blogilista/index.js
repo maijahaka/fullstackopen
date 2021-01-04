@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
+const config = require('./utils/config')
 const logger = require('./utils/logger')
 
 const blogSchema = mongoose.Schema({
@@ -13,9 +14,7 @@ const blogSchema = mongoose.Schema({
 
 const Blog = mongoose.model('Blog', blogSchema)
 
-const password = process.argv[2]
-const mongoUrl = 
-    `mongodb+srv://fullstack:${password}@cluster0.jqrkr.mongodb.net/bloglist?retryWrites=true&w=majority`
+const mongoUrl = config.MONGODB_URI
 
 mongoose.connect(mongoUrl, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 
@@ -40,7 +39,6 @@ app.post('/api/blogs', (request, response) => {
         })
 })
 
-const PORT = 3003
-app.listen(PORT, () => {
-    logger.info(`Server running on port ${PORT}`)
+app.listen(config.PORT, () => {
+    logger.info(`Server running on port ${config.PORT}`)
 })
