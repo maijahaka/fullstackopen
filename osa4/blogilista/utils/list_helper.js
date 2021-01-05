@@ -34,8 +34,40 @@ const favoriteBlog = (blogs) => {
     : null
 }
 
+const mostBlogs = (blogs) => {
+    const authors = {}
+
+    blogs.map(blog => {
+        !authors[blog.author]
+        ? authors[blog.author] = 1
+        : authors[blog.author] = authors[blog.author] + 1
+    })
+
+    const maxReducer = (max, blogs) => {
+        return blogs > max
+        ? blogs
+        : max
+    }
+
+    const mostBlogs = Object.values(authors).reduce(maxReducer, 0)
+
+    const checkMostBlogs = (author) => {
+        return authors[author] === mostBlogs
+    }
+
+    const authorWithMostBlogs = Object.keys(authors).find(checkMostBlogs)
+
+    return blogs.length > 0
+    ? {
+        author: authorWithMostBlogs,
+        blogs: authors[authorWithMostBlogs]
+    }
+    : null
+}
+
 module.exports = {
     dummy,
     totalLikes,
-    favoriteBlog
+    favoriteBlog,
+    mostBlogs
 }
