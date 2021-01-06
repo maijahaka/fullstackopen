@@ -67,6 +67,18 @@ test('if number of likes is not set it is given default value of 0', async () =>
     expect(response.body.likes).toBe(0)
 })
 
+test('blog with missing "title" and "url" fields is not added', async () => {
+    const newBlog = {
+        author: 'blog author',
+        likes: 0
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)    
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
