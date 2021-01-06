@@ -6,6 +6,7 @@ const app = require('../app')
 const api = supertest(app)
 
 const Blog = require('../models/blog')
+const blogsRouter = require('../controllers/blogs')
 
 beforeEach(async() => {
     await Blog.deleteMany({})
@@ -93,6 +94,29 @@ describe('deletion of a blog', () => {
         expect(blogsAtEnd).toHaveLength(
             helper.initialBlogs.length - 1
         )
+    })
+})
+
+describe('modification of a blog', () => {
+    test('succeeds if id is valid', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToBeModified = blogsAtStart[0]
+
+        const modifiedBlog = {
+            title: blogToBeModified.title,
+            author: blogToBeModified.author,
+            url: blogToBeModified.url,
+            likes: blogToBeModified.likes + 1
+        }
+
+        const result = await api
+            .put(`/api/blogs/${blogToBeModified.id}`)
+            .send(modifiedBlog)
+            .expect(200)
+        
+        const blogsAtEnd = await helper.blogsInDb()
+
+        expect(blogsAtEnd[0].likes).toBe(blogToBeModified.likes + 1)
     })
 })
 
