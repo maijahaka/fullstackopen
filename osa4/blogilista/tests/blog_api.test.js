@@ -8,7 +8,7 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 const blogsRouter = require('../controllers/blogs')
 
-beforeEach(async() => {
+beforeEach(async () => {
     await Blog.deleteMany({})
     await Blog.insertMany(helper.initialBlogs)
 })
@@ -42,6 +42,7 @@ test('a valid blog can be added', async () => {
 
     await api
         .post('/api/blogs')
+        .set('Authorization', process.env.TEST_AUTHORIZATION)
         .send(newBlog)
         .expect(200)
         .expect('Content-Type', /application\/json/)
@@ -63,6 +64,7 @@ test('if number of likes is not set it is given default value of 0', async () =>
 
     const response = await api
         .post('/api/blogs')
+        .set('Authorization', process.env.TEST_AUTHORIZATION)
         .send(newBlog)
 
     expect(response.body.likes).toBe(0)
@@ -76,10 +78,34 @@ test('blog with missing "title" and "url" fields is not added', async () => {
 
     await api
         .post('/api/blogs')
+        .set('Authorization', process.env.TEST_AUTHORIZATION)
         .send(newBlog)
-        .expect(400)    
+        .expect(400)   
+    
+    const blogsAtEnd = await helper.blogsInDb()
+
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
 })
 
+test('blog creation fails with status code 401 if token is missing', async () => {
+    const newBlog = {
+        title: 'blog to be added',
+        author: 'blog author',
+        url: 'https://www.blogger.com',
+        likes: 0
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(401)
+    
+    const blogsAtEnd = await helper.blogsInDb()
+
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+})
+
+/*
 describe('deletion of a blog', () => {
     test('succeeds with status code 204 if id is valid', async () => {
         const blogsAtStart = await helper.blogsInDb()
@@ -87,6 +113,7 @@ describe('deletion of a blog', () => {
 
         const result = await api
             .delete(`/api/blogs/${blogToDelete.id}`)
+            .set('Authorization', process.env.TEST_AUTHORIZATION)
             .expect(204)
 
         const blogsAtEnd = await helper.blogsInDb()
@@ -96,6 +123,7 @@ describe('deletion of a blog', () => {
         )
     })
 })
+*/
 
 describe('modification of a blog', () => {
     test('succeeds if id is valid', async () => {
