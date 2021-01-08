@@ -8,6 +8,9 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -35,6 +38,7 @@ const App = () => {
         'loggedBloglistUser', JSON.stringify(user)
       )
 
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -47,7 +51,23 @@ const App = () => {
     event.preventDefault()
 
     window.localStorage.removeItem('loggedBloglistUser')
+    blogService.setToken(null)
     setUser(null)
+  }
+
+  const handleBlogCreation = async (event) => {
+    event.preventDefault()
+
+    try {
+      const blogObject = { title, author, url }
+      const returnedBlog = await blogService.create(blogObject)
+      setBlogs(blogs.concat(returnedBlog))
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+    } catch (exception) {
+      console.log(exception)
+    }
   }
 
   if (user === null) {
@@ -88,6 +108,41 @@ const App = () => {
           logout
         </button>
       </p>
+
+      <h2>create new</h2>
+      <form onSubmit={handleBlogCreation}>
+        <div>
+          title:
+            <input
+              type="text"
+              value={title}
+              name="Title"
+              onChange={({ target }) => setTitle(target.value)}
+            />
+        </div>
+        <div>
+          author:
+            <input
+              type="text"
+              value={author}
+              name="Author"
+              onChange={({ target }) => setAuthor(target.value)} 
+            />
+        </div>
+        <div>
+          url:
+            <input 
+              type="text"
+              value={url}
+              name="Url"
+              onChange={({ target }) => setUrl(target.value)}
+            />
+        </div>
+        <div>
+          <button type="submit">create</button>
+        </div>
+      </form>
+
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
