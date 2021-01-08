@@ -122,6 +122,14 @@ const App = () => {
     }
   }
 
+  const likeBlog = async (id, blogObject) => {
+    try {
+      return await blogService.put(id, blogObject)
+    } catch (exception) {
+      console.log('error: like was not successful')
+    }
+  }
+
   const loginForm = () => (
     <div>
       <h2>log in to application</h2>
@@ -168,7 +176,7 @@ const App = () => {
       </p>
       {addBlogForm()}
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />  
+        <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />  
       )}
     </div>
   )

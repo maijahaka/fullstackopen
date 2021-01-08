@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-const Blog = ({ blog }) => {
+const Blog = ({ blog, likeBlog }) => {
+  const[likes, setLikes] = useState(blog.likes)
   const [viewDetails, setViewDetails] = useState(false)
 
   const handleClick = (event) => {
@@ -7,16 +8,26 @@ const Blog = ({ blog }) => {
     setViewDetails(!viewDetails)
   }
 
-  const handleLike = (event) => {
+  const handleLike = async (event) => {
     event.preventDefault()
-    console.log('blog liked')
+    const id = blog.id
+    const blogObject = {
+      user: blog.user._id,
+      likes: likes + 1,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url
+    }
+    const returnedBlog = await likeBlog(id, blogObject)
+    setLikes(returnedBlog.likes)
+    console.log(returnedBlog)
   }
 
   const detailedView = () => (
     <div>
       <div>{blog.url}</div>
       <div>
-        likes {blog.likes}
+        likes {likes}
         <button onClick={handleLike}>like</button>
       </div>
       <div>{blog.user.name}</div>
