@@ -11,6 +11,42 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [message, setMessage] = useState(null)
+  const [notificationType, setNotificationType] = useState(null)
+
+  const Notification = ({ message, notificationType }) => {
+    const notificationStyle = {
+      color: 'green',
+      background: 'lightgrey',
+      fontSize: 20,
+      borderStyle: 'solid',
+      borderRadius: 5,
+      padding: 10,
+      marginBottom: 10
+    }
+
+    const errorMessageStyle = {
+      color: 'red',
+      background: 'lightgrey',
+      fontSize: 20,
+      borderStyle: 'solid',
+      borderRadius: 5,
+      padding: 10,
+      marginBottom: 10
+    }
+
+    if (message === null) {
+      return null
+    }
+    
+    return (
+      <div style={notificationType === 'error' 
+          ? errorMessageStyle 
+          : notificationStyle}>
+        {message}
+      </div>
+    )
+  }
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -44,6 +80,12 @@ const App = () => {
       setPassword('')
     } catch (exception) {
       console.log('wrong credentials')
+      setNotificationType('error')
+      setMessage('wrong username or password')
+      setTimeout(() => {
+        setMessage(null)
+        setNotificationType(null)
+      }, 5000)
     }
   }
 
@@ -53,6 +95,9 @@ const App = () => {
     window.localStorage.removeItem('loggedBloglistUser')
     blogService.setToken(null)
     setUser(null)
+    setTitle('')
+    setAuthor('')
+    setUrl('')
   }
 
   const handleBlogCreation = async (event) => {
@@ -62,11 +107,23 @@ const App = () => {
       const blogObject = { title, author, url }
       const returnedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(returnedBlog))
+      setNotificationType('info')
+      setMessage(`a new blog ${title} by ${author} added`)
       setTitle('')
       setAuthor('')
       setUrl('')
+      setTimeout(() => {
+        setMessage(null)
+        setNotificationType(null)
+      }, 5000)
     } catch (exception) {
-      console.log(exception)
+      console.log('error: title or url missing')
+      setNotificationType('error')
+      setMessage('blog was not added: title or url is missing')
+      setTimeout(() => {
+        setMessage(null)
+        setNotificationType(null)
+      }, 5000)
     }
   }
 
@@ -74,6 +131,7 @@ const App = () => {
     return (
       <div>
         <h2>log in to application</h2>
+        <Notification message={message} notificationType={notificationType} />
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -102,6 +160,7 @@ const App = () => {
   return(
     <div>
       <h2>blogs</h2>
+      <Notification message={message} notificationType={notificationType} />
       <p>
         {user.name} logged in
         <button onClick={handleLogout}>
