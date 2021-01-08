@@ -1,18 +1,43 @@
-import React from 'react'
+import React, { useState, useImperativeHandle } from 'react'
 
-const AddBlogForm = ({
-    handleSubmit,
-    handleTitleChange,
-    handleAuthorChange,
-    handleUrlChange,
-    title,
-    author,
-    url
-    }) => {
+const AddBlogForm = React.forwardRef(({ createBlog }, ref) => {
+    const [title, setTitle] = useState('')
+    const [author, setAuthor] = useState('')
+    const [url, setUrl] = useState('')
+    
+    const handleTitleChange = ({ target }) => {
+        setTitle(target.value)
+    }
+    const handleAuthorChange = ({ target }) => {
+        setAuthor(target.value)
+    }
+    const handleUrlChange = ({ target }) => {
+        setUrl(target.value)
+    }
+
+    const resetForm = () => {
+        setTitle('')
+        setAuthor('')
+        setUrl('')
+    }
+
+    useImperativeHandle(ref, () => {
+        return {
+            resetForm, title, author
+        }
+    })
+
+    const addBlog = async (event) => {
+        event.preventDefault()
+        await createBlog({ title, author, url })
+
+        resetForm()
+    }
+
     return (
         <div>
             <h2>create new</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={addBlog}>
             <div>
                 title:
                 <input
@@ -46,6 +71,6 @@ const AddBlogForm = ({
             </form>
         </div>
     )
-}
+})
 
 export default AddBlogForm
