@@ -47,10 +47,20 @@ const App = () => {
     )
   }
 
+  const compareFunction = (a, b) => {
+    if (a.likes < b.likes) {
+      return 1
+    }
+    if (a.likes > b.likes) {
+      return -1
+    }
+    return 0    
+  }
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -101,7 +111,8 @@ const App = () => {
     try {
       addBlogTogglableRef.current.toggleVisibility()
       const returnedBlog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(returnedBlog))
+      const newBlog = {...returnedBlog, user: user}
+      setBlogs(blogs.concat(newBlog))
       setNotificationType('info')
       setMessage(
         `a new blog ${addBlogFormRef.current.title} 
@@ -175,8 +186,17 @@ const App = () => {
         </button>  
       </p>
       {addBlogForm()}
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />  
+      {blogs
+        .sort(compareFunction)
+        .map(blog =>
+          <Blog 
+            key={blog.id} 
+            blog={blog} 
+            likeBlog={likeBlog}
+            blogs={blogs}
+            setBlogs={setBlogs}
+            compareFunction={compareFunction}
+          />  
       )}
     </div>
   )
