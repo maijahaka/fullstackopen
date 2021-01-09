@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-const Blog = ({ blog, likeBlog, blogs, setBlogs, compareFunction }) => {
+const Blog = ({ blog, likeBlog, deleteBlog, blogs, setBlogs, user }) => {
   const [viewDetails, setViewDetails] = useState(false)
 
   const handleClick = (event) => {
@@ -26,6 +26,18 @@ const Blog = ({ blog, likeBlog, blogs, setBlogs, compareFunction }) => {
     setBlogs(updatedBlogs)
   }
 
+  const handleDelete = async (event) => {
+    event.preventDefault()
+
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      const id = blog.id
+      await deleteBlog(id)
+
+      const updatedBlogs = blogs.filter(blog => blog.id !== id)
+      setBlogs(updatedBlogs)
+    }
+  }
+
   const detailedView = () => (
     <div>
       <div>{blog.url}</div>
@@ -34,6 +46,11 @@ const Blog = ({ blog, likeBlog, blogs, setBlogs, compareFunction }) => {
         <button onClick={handleLike}>like</button>
       </div>
       <div>{blog.user.name}</div>
+      { 
+        blog.user.id === user.id
+          ? <button onClick={handleDelete}>remove</button>
+          : ''
+      }
     </div>
   )
 

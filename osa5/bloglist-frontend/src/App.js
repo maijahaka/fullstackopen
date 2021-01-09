@@ -68,6 +68,7 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 
@@ -141,6 +142,14 @@ const App = () => {
     }
   }
 
+  const deleteBlog = async (id) => {
+    try {
+      await blogService.deleteBlog(id)
+    } catch (exception) {
+      console.log('error: blog was not deleted successfully')
+    }
+  }
+
   const loginForm = () => (
     <div>
       <h2>log in to application</h2>
@@ -193,9 +202,10 @@ const App = () => {
             key={blog.id} 
             blog={blog} 
             likeBlog={likeBlog}
+            deleteBlog={deleteBlog}
             blogs={blogs}
             setBlogs={setBlogs}
-            compareFunction={compareFunction}
+            user={user}
           />  
       )}
     </div>
