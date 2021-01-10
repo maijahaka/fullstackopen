@@ -68,6 +68,16 @@ describe('Blog app', function() {
                 cy.contains('cypress title')
                     .contains('likes 1')
             })
+
+            it('the creator of the blog can remove it', function() {
+                cy.contains('cypress title')
+                    .get('#remove-button')
+                    .click()
+
+                cy.on('window:confirm', () =>  true)
+
+                cy.get('html').should('not.contain', 'cypress title')
+            })
         })
     })
 })
