@@ -42,6 +42,7 @@ const AddBlogForm = React.forwardRef(({ createBlog }, ref) => {
                 <div>
                     title:
                     <input
+                        id="title"
                         type="text"
                         value={title}
                         name="Title"
@@ -51,6 +52,7 @@ const AddBlogForm = React.forwardRef(({ createBlog }, ref) => {
                 <div>
                 author:
                     <input
+                        id="author"
                         type="text"
                         value={author}
                         name="Author"
@@ -60,6 +62,7 @@ const AddBlogForm = React.forwardRef(({ createBlog }, ref) => {
                 <div>
                 url:
                     <input
+                        id="url"
                         type="text"
                         value={url}
                         name="Url"
