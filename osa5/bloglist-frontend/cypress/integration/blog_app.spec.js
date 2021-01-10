@@ -28,4 +28,27 @@ describe('Blog app', function() {
             cy.contains('wrong username or password')
         })
     })
+
+    describe('When logged in', function() {
+        beforeEach(function() {
+            cy.request('POST', 'http://localhost:3001/api/login', {
+                username:'testuser', password: 'testpassword'
+            }).then(response => {
+                localStorage.setItem(
+                    'loggedBlogAppUser', JSON.stringify(response.body)
+                )
+                cy.visit('http://localhost:3000')
+            })
+        })
+
+        it('A blog can be created', function() {
+            cy.contains('new blog').click()
+            cy.get('#title').type('cypress title')
+            cy.get('#author').type('cypress author')
+            cy.get('#url').type('cypress url')
+            cy.contains('create').click()
+            cy.contains('cypress title')
+            cy.contains('cypress author')
+        })
+    })
 })
