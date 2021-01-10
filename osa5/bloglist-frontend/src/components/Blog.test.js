@@ -7,10 +7,12 @@ import userEvent from '@testing-library/user-event'
 describe('blog', () => {
 
     let component
+    let mockHandler
 
     beforeEach(() => {
         const blog = {
 
+            id: 'testblog123',
             title: 'test blog',
             author: 'test author',
             url: 'http://www.blogger.com',
@@ -21,13 +23,24 @@ describe('blog', () => {
             }
         }
 
+        const blogs = [blog]
+        const setBlogs = jest.fn()
+
         const user = {
             id: 'testid123',
             name: 'test user'
         }
 
+        mockHandler = jest.fn()
+
         component = render(
-            <Blog blog={blog} user={user} />
+            <Blog
+                blog={blog}
+                likeBlog={mockHandler}
+                blogs={blogs}
+                setBlogs={setBlogs}
+                user={user}
+            />
         )
     })
 
@@ -56,5 +69,16 @@ describe('blog', () => {
         expect(component.container).toHaveTextContent(
             '0'
         )
+    })
+
+    test('calls event handler twice if like button is clicked twice', () => {
+        const viewButton = component.getByText('view')
+        fireEvent.click(viewButton)
+
+        const likeButton = component.getByText('like')
+        fireEvent.click(likeButton)
+        fireEvent.click(likeButton)
+
+        expect(mockHandler.mock.calls).toHaveLength(2)
     })
 })
