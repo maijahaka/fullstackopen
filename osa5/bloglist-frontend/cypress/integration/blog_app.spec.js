@@ -50,5 +50,24 @@ describe('Blog app', function() {
             cy.contains('cypress title')
             cy.contains('cypress author')
         })
+
+        describe('and a blog exists', function() {
+            beforeEach(function() {
+                cy.contains('new blog').click()
+                cy.get('#title').type('cypress title')
+                cy.get('#author').type('cypress author')
+                cy.get('#url').type('cypress url')
+                cy.contains('create').click()
+            })
+
+            it('the blog can be liked', function() {
+                cy.contains('cypress title')
+                    .get('#like-button')
+                    .click()
+
+                cy.contains('cypress title')
+                    .contains('likes 1')
+            })
+        })
     })
 })
