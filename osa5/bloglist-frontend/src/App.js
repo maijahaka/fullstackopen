@@ -39,9 +39,12 @@ const App = () => {
         }
 
         return (
-            <div style={notificationType === 'error'
-                ? errorMessageStyle
-                : notificationStyle}>
+            <div
+                className="error"
+                style={notificationType !== 'error'
+                    ? notificationStyle
+                    : errorMessageStyle}
+            >
                 {message}
             </div>
         )
