@@ -40,7 +40,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, blogs, setBlogs, user }) => {
 
     const detailedView = () => (
         <div>
-            <div>{blog.url}</div>
+            <div className="blogUrl">{blog.url}</div>
             <div>
                 likes {blog.likes}
                 <button onClick={handleLike}>like</button>
